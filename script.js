@@ -61,7 +61,8 @@ document.getElementById("streakCount");
 let running = false;
 let elapsed = 0;
 let interval;
-
+let startTime = 0;
+let pausedTime = 0;
 const GOAL_SECONDS =
 12 * 60 * 60;
 
@@ -123,8 +124,23 @@ if(running) return;
 
 running = true;
 
+startTime =
+Date.now() - (elapsed * 1000);
+
 interval =
-setInterval(updateTimer,1000);
+setInterval(()=>{
+
+elapsed =
+Math.floor(
+(Date.now() - startTime) / 1000
+);
+
+timer.textContent =
+formatTime(elapsed);
+
+updateRing();
+
+},1000);
 
 };
 
@@ -151,8 +167,7 @@ elapsed = 0;
 timer.textContent =
 "00:00:00";
 
-progressRing.style.strokeDashoffset =
-CIRCUMFERENCE;
+updateDashboard();
 
 };
 
