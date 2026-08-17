@@ -55,8 +55,14 @@ document.getElementById("subjectCount");
 const exportBtn =
 document.getElementById("exportBtn");
 
+const analyticsBtn =
+document.getElementById("analyticsBtn");
+
 const streakCount =
 document.getElementById("streakCount");
+
+const heatmap =
+document.getElementById("heatmap");
 
 let running = false;
 let elapsed = 0;
@@ -166,6 +172,9 @@ elapsed = 0;
 
 timer.textContent =
 "00:00:00";
+
+progressRing.style.strokeDashoffset =
+CIRCUMFERENCE;
 
 updateDashboard();
 
@@ -426,6 +435,87 @@ streakCount.textContent =
 
 }
 
+/* ---------------- HEATMAP ---------------- */
+
+function updateHeatmap(){
+
+if(!heatmap) return;
+
+let sessions =
+JSON.parse(
+localStorage.getItem("sessions")
+) || [];
+
+heatmap.innerHTML = "";
+
+let dailyTotals = {};
+
+sessions.forEach(session=>{
+
+const day =
+new Date(session.date)
+.toDateString();
+
+if(!dailyTotals[day]){
+
+dailyTotals[day] = 0;
+
+}
+
+dailyTotals[day] +=
+session.duration;
+
+});
+
+for(let i=29;i>=0;i--){
+
+const date = new Date();
+
+date.setDate(
+date.getDate() - i
+);
+
+const dayKey =
+date.toDateString();
+
+const seconds =
+dailyTotals[dayKey] || 0;
+
+const box =
+document.createElement("div");
+
+if(seconds > 0){
+
+    if(seconds < 10800){ // less than 3 hrs
+
+        box.classList.add("heat-1");
+
+    }else if(seconds < 21600){ // 3-6 hrs
+
+        box.classList.add("heat-2");
+
+    }else if(seconds < 32400){ // 6-9 hrs
+
+        box.classList.add("heat-3");
+
+    }else{ // 9+ hrs
+
+        box.classList.add("heat-4");
+
+    }
+
+}
+
+box.title =
+`${dayKey}
+${formatTime(seconds)}`;
+
+heatmap.appendChild(box);
+
+}
+
+}
+
 /* ---------------- DASHBOARD ---------------- */
 
 function updateDashboard(){
@@ -435,24 +525,64 @@ JSON.parse(
 localStorage.getItem("sessions")
 ) || [];
 
-let total = 0;
+const today =
+new Date().toDateString();
+
+let todayTotal = 0;
+let weekTotal = 0;
+let monthTotal = 0;
 let longest = 0;
+
+const now = new Date();
 
 sessions.forEach(session=>{
 
-total += session.duration;
+const sessionDate =
+new Date(session.date);
 
 if(session.duration > longest){
 
-longest =
-session.duration;
+longest = session.duration;
+
+}
+
+/* TODAY */
+
+if(
+sessionDate.toDateString() === today
+){
+
+todayTotal += session.duration;
+
+}
+
+/* THIS WEEK */
+
+const daysDiff =
+(now - sessionDate) /
+(1000 * 60 * 60 * 24);
+
+if(daysDiff <= 7){
+
+weekTotal += session.duration;
+
+}
+
+/* THIS MONTH */
+
+if(
+sessionDate.getMonth() === now.getMonth() &&
+sessionDate.getFullYear() === now.getFullYear()
+){
+
+monthTotal += session.duration;
 
 }
 
 });
 
 todayTime.textContent =
-formatTime(total);
+formatTime(todayTotal);
 
 sessionCount.textContent =
 sessions.length;
@@ -464,7 +594,7 @@ const percentage =
 Math.min(
 100,
 Math.floor(
-(total/GOAL_SECONDS)*100
+(todayTotal / GOAL_SECONDS) * 100
 )
 );
 
@@ -472,17 +602,22 @@ goalPercent.textContent =
 percentage + "%";
 
 goalText.textContent =
-`${formatTime(total)} / 12:00:00`;
+`${formatTime(todayTotal)} / 12:00:00`;
 
 goalProgress.style.width =
 percentage + "%";
+
+/* Average Session */
 
 if(sessions.length){
 
 avgSession.textContent =
 formatTime(
 Math.floor(
-total / sessions.length
+sessions.reduce(
+(sum,s)=>sum+s.duration,
+0
+) / sessions.length
 )
 );
 
@@ -493,11 +628,17 @@ avgSession.textContent =
 
 }
 
+/* Weekly */
+
 weeklyHours.textContent =
-formatTime(total);
+formatTime(weekTotal);
+
+/* Monthly */
 
 monthlyHours.textContent =
-formatTime(total);
+formatTime(monthTotal);
+
+/* Subject Count */
 
 subjectCount.textContent =
 subjectSelect.options.length;
@@ -631,10 +772,20 @@ table.innerHTML = html;
 updateDashboard();
 updateSubjectAnalytics();
 updateStreak();
-
+updateHeatmap();
 }
 
 /* ---------------- STARTUP ---------------- */
+
+analyticsBtn.onclick = ()=>{
+
+document
+.querySelector(".dashboard-grid")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+};
 
 loadSubjects();
 
