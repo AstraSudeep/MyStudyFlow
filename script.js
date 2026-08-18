@@ -813,9 +813,13 @@ behavior:"smooth"
 
 };
 
-loadSubjects();
+window.addEventListener("DOMContentLoaded", () => {
 
-progressRing.style.strokeDashoffset =
-CIRCUMFERENCE;
+    loadSubjects();
 
-renderSessions();
+    progressRing.style.strokeDashoffset =
+    CIRCUMFERENCE;
+
+    renderSessions();
+
+});
