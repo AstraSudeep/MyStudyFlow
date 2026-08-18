@@ -1,184 +1,309 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Command Center</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Command Center</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="app">
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
-            <div class="logo">⚡ StudyFlow</div>
-            <nav>
-                <a class="active">Overview</a>
-                <a>Focus Timer</a>
-                <a>Subjects</a>
-                <a>Analytics</a>
-                <a>Goals</a>
-                <a>Calendar</a>
-                <a>Sessions</a>
-                <a>Settings</a>
-            </nav>
-            <div class="streak-box">
-                <h4>🔥 Streak</h4>
-                <span id="streakCount">0 Days</span>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            ⚡ StudyFlow
+        </div>
+
+        <nav>
+            <a class="active">Overview</a>
+            <a>Focus Timer</a>
+            <a>Subjects</a>
+            <a>Analytics</a>
+            <a>Goals</a>
+            <a>Calendar</a>
+            <a>Sessions</a>
+            <a>Settings</a>
+        </nav>
+
+        <div class="streak-box">
+            <h4>🔥 Streak</h4>
+            <span id="streakCount">0 Days</span>
+        </div>
+
+    </aside>
+
+    <main>
+
+        <header>
+
+            <div>
+                <h1>Happy Progress!</h1>
+                <p>Stay focused. Every hour counts.</p>
             </div>
-        </aside>
 
-        <!-- MAIN CONTENT -->
-        <main>
-            <!-- HEADER -->
-            <header>
-                <div>
-                    <h1>Happy Progress!</h1>
-                    <p>Stay focused. Every hour counts.</p>
-                </div>
-                <div class="header-actions">
-                    <button id="exportBtn" class="ghost-btn">Export</button>
-                    <button id="analyticsBtn" class="ghost-btn">Analytics</button>
-                    <div class="avatar">SK</div>
-                </div>
-            </header>
+            <div class="header-actions">
 
-            <!-- STATS SECTION -->
-            <section class="stats">
-                <div class="card stat">
-                    <h3>Today's Time</h3>
-                    <h2 id="todayTime">00:00:00</h2>
-                </div>
-                <div class="card stat">
-                    <h3>Sessions</h3>
-                    <h2 id="sessionCount">0</h2>
-                </div>
-                <div class="card stat">
-                    <h3>Goal Progress</h3>
-                    <h2 id="goalPercent">0%</h2>
-                </div>
-                <div class="card stat">
-                    <h3>Longest Session</h3>
-                    <h2 id="longestSession">00:00:00</h2>
-                </div>
-            </section>
+                <button id="exportBtn" class="ghost-btn">
+                    Export
+                </button>
 
-            <!-- TIMER & GOAL SECTION -->
-            <section class="hero">
-                <div class="card timer-card">
-                    <div class="subject-picker">
-                        <select id="subjectSelect">
-                            <option>Reasoning</option>
-                            <option>Quant</option>
-                            <option>English</option>
-                            <option>General Awareness</option>
-                            <option>Computer Knowledge</option>
-                        </select>
-                    </div>
-                    <div class="add-subject">
-                        <input id="newSubject" placeholder="Add Subject">
-                        <button id="addSubjectBtn">+</button>
-                    </div>
-                    <h3>Deep Focus Session</h3>
-                    <div class="focus-ring">
-                        <svg width="280" height="280">
-                            <circle class="ring-bg" cx="140" cy="140" r="120"></circle>
-                            <circle id="progressRing" class="ring-progress" cx="140" cy="140" r="120"></circle>
-                        </svg>
-                        <div class="timer" id="timer">00:00:00</div>
-                    </div>
-                    <div class="controls">
-                        <button id="startBtn" class="start">Start</button>
-                        <button id="pauseBtn" class="pause">Pause</button>
-                        <button id="stopBtn" class="stop">Stop</button>
-                    </div>
-                </div>
-                <div class="card goal-card">
-                    <h3>Daily Goal</h3>
-                    <div class="progress-bar">
-                        <div class="progress" id="goalProgress"></div>
-                    </div>
-                    <h2 id="goalText">00:00:00 / 12:00:00</h2>
-                </div>
-            </section>
+                <button id="analyticsBtn" class="ghost-btn">
+                    Analytics
+                </button>
 
-            <!-- SECONDARY STATS -->
-            <section class="stats secondary">
-                <div class="card stat">
-                    <h3>Weekly Study</h3>
-                    <h2 id="weeklyHours">00:00:00</h2>
-                </div>
-                <div class="card stat">
-                    <h3>Monthly Study</h3>
-                    <h2 id="monthlyHours">00:00:00</h2>
-                </div>
-                <div class="card stat">
-                    <h3>Best Subject</h3>
-                    <h2 id="bestSubject">-</h2>
-                </div>
-                <div class="card stat">
-                    <h3>Total Subjects</h3>
-                    <h2 id="subjectCount">0</h2>
-                </div>
-            </section>
-
-            <!-- DASHBOARD GRID -->
-            <section class="dashboard-grid">
-                <div class="card heatmap-card">
-                    <h3>Study Activity</h3>
-                    <div class="heatmap" id="heatmap"></div>
-                    <div class="heatmap-legend">
-                        <span>No Study</span>
-                        <div></div>
-                        <span>1-3h</span>
-                        <div class="heat-1"></div>
-                        <span>3-6h</span>
-                        <div class="heat-2"></div>
-                        <span>6-9h</span>
-                        <div class="heat-3"></div>
-                        <span>9h+</span>
-                        <div class="heat-4"></div>
-                    </div>
+                <div class="avatar">
+                    SK
                 </div>
 
-                <div class="card insights-card">
-                    <h3>Focus Insights</h3>
-                    <div class="insight">
-                        <span>Peak Focus Time</span>
-                        <strong id="peakTime">-</strong>
-                    </div>
-                    <div class="insight">
-                        <span>Average Session</span>
-                        <strong id="avgSession">00:00:00</strong>
-                    </div>
-                    <div class="insight">
-                        <span>Most Studied</span>
-                        <strong id="mostStudied">-</strong>
-                    </div>
+            </div>
+
+        </header>
+
+        <section class="stats">
+
+            <div class="card stat">
+                <h3>Today's Time</h3>
+                <h2 id="todayTime">00:00:00</h2>
+            </div>
+
+            <div class="card stat">
+                <h3>Sessions</h3>
+                <h2 id="sessionCount">0</h2>
+            </div>
+
+            <div class="card stat">
+                <h3>Goal Progress</h3>
+                <h2 id="goalPercent">0%</h2>
+            </div>
+
+            <div class="card stat">
+                <h3>Longest Session</h3>
+                <h2 id="longestSession">00:00:00</h2>
+            </div>
+
+        </section>
+
+        <section class="hero">
+
+            <div class="card timer-card">
+
+                <div class="subject-picker">
+
+                    <select id="subjectSelect">
+                        <option>Reasoning</option>
+                        <option>Quant</option>
+                        <option>English</option>
+                        <option>General Awareness</option>
+                        <option>Computer Knowledge</option>
+                    </select>
+
                 </div>
 
-                <div class="card">
-                    <h3>Subject Breakdown</h3>
-                    <ul class="subjects" id="subjectAnalytics"></ul>
+                <div class="add-subject">
+
+    <input
+    id="newSubject"
+    placeholder="Add Subject">
+
+    <button id="addSubjectBtn">
+        +
+    </button>
+
+
+</div>
+
+                <h3>Deep Focus Session</h3>
+
+                <div class="focus-ring">
+
+                    <svg width="280" height="280">
+
+                        <circle
+                        class="ring-bg"
+                        cx="140"
+                        cy="140"
+                        r="120">
+                        </circle>
+
+                        <circle
+                        id="progressRing"
+                        class="ring-progress"
+                        cx="140"
+                        cy="140"
+                        r="120">
+                        </circle>
+
+                    </svg>
+
+                    <div class="timer" id="timer">
+                        00:00:00
+                    </div>
+
                 </div>
 
-                <div class="card">
-                    <h3>Recent Sessions</h3>
-                    <table id="historyTable">
-                        <tr>
-                            <th>Subject</th>
-                            <th>Duration</th>
-                            <th>Date</th>
-                            <th>Action</th>
-                        </tr>
-                    </table>
+                <div class="controls">
+
+                    <button id="startBtn" class="start">
+                        Start
+                    </button>
+
+                    <button id="pauseBtn" class="pause">
+                        Pause
+                    </button>
+
+                    <button id="stopBtn" class="stop">
+                        Stop
+                    </button>
+
                 </div>
-            </section>
-        </main>
+
+            </div>
+
+            <div class="card goal-card">
+
+                <h3>Daily Goal</h3>
+
+                <div class="progress-bar">
+
+                    <div
+                    class="progress"
+                    id="goalProgress">
+                    </div>
+
+                </div>
+
+                <h2 id="goalText">
+                    00:00:00 / 12:00:00
+                </h2>
+
+            </div>
+
+        </section>
+
+        <section class="stats secondary">
+
+            <div class="card stat">
+                <h3>Weekly Study</h3>
+                <h2 id="weeklyHours">00:00:00</h2>
+            </div>
+
+            <div class="card stat">
+                <h3>Monthly Study</h3>
+                <h2 id="monthlyHours">00:00:00</h2>
+            </div>
+
+            <div class="card stat">
+                <h3>Best Subject</h3>
+                <h2 id="bestSubject">-</h2>
+            </div>
+
+            <div class="card stat">
+                <h3>Total Subjects</h3>
+                <h2 id="subjectCount">0</h2>
+            </div>
+
+        </section>
+
+        <section class="dashboard-grid">
+
+            <div class="card heatmap-card">
+
+    <h3>Study Activity</h3>
+
+    <div
+    class="heatmap"
+    id="heatmap">
     </div>
 
-    <script src="script.js"></script>
+    <div class="heatmap-legend">
+
+        <span>No Study</span>
+
+        <div></div>
+
+        <span>1-3h</span>
+
+        <div class="heat-1"></div>
+
+        <span>3-6h</span>
+
+        <div class="heat-2"></div>
+
+        <span>6-9h</span>
+
+        <div class="heat-3"></div>
+
+        <span>9h+</span>
+
+        <div class="heat-4"></div>
+
+    </div>
+
+</div>
+
+            <div class="card insights-card">
+
+                <h3>Focus Insights</h3>
+
+                <div class="insight">
+                    <span>Peak Focus Time</span>
+                    <strong id="peakTime">-</strong>
+                </div>
+
+                <div class="insight">
+                    <span>Average Session</span>
+                    <strong id="avgSession">00:00:00</strong>
+                </div>
+
+                <div class="insight">
+                    <span>Most Studied</span>
+                    <strong id="mostStudied">-</strong>
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Subject Breakdown</h3>
+
+                <ul
+                class="subjects"
+                id="subjectAnalytics">
+                </ul>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Recent Sessions</h3>
+
+                <table id="historyTable">
+
+                    <tr>
+                        <th>Subject</th>
+                        <th>Duration</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>
